@@ -95,43 +95,55 @@ namespace OpenXmlDocs
                 var tbl = new Table();
                 var tblProps = new TableProperties();
                 var tblStyle = new TableStyle { Val = "TableGrid" };
-
                 // make the table width 100% of the page width.
                 var tblWidth = new TableWidth { Width = "5000", Type = TableWidthUnitValues.Pct };
+                var tg = new TableGrid(new GridColumn(), new GridColumn(), new GridColumn());
 
                 tblProps.Append(tblStyle, tblWidth);
-                tbl.AppendChild(tblProps);
+                tbl.Append(tblProps, tg);
 
-                var tg = new TableGrid(new GridColumn(), new GridColumn(), new GridColumn());
-                tbl.AppendChild(tg);
-
-                var tr1 = new TableRow();
-
-                var tc1 = new TableCell(new Paragraph(new Run(new Text("Justified Left"))));
-
-                var tc2 = new TableCell(
-                    new Paragraph(
-                        new ParagraphProperties(new Justification
-                        {
-                            Val = JustificationValues.Center
-                        }),
-                        new Run(new Text("Justified Center"))
+                var tr1 = new TableRow(
+                    new TableCell(
+                        new Paragraph(new Run(new Text("Justified Left")))
+                    ),
+                    new TableCell(
+                        new Paragraph(
+                            new ParagraphProperties(new Justification
+                            {
+                                Val = JustificationValues.Center
+                            }),
+                            new Run(new Text("Justified Center"))
+                        )
+                    ),
+                    new TableCell(
+                        new Paragraph(
+                            new ParagraphProperties(new Justification
+                            {
+                                Val = JustificationValues.End
+                            }),
+                            new Run(new Text("Justified Right"))
+                        )
                     )
                 );
 
-                var tc3 = new TableCell(
-                    new Paragraph(
-                        new ParagraphProperties(new Justification
-                        {
-                            Val = JustificationValues.End
-                        }),
-                        new Run(new Text("Justified Right"))
+                var tr2 = new TableRow(
+                    new TableCell(
+                        new TableCellProperties(
+                            new GridSpan() { Val = 3 }
+                        ),
+                        new Paragraph(
+                            new ParagraphProperties(
+                                new Justification()
+                                {
+                                    Val = JustificationValues.Center
+                                }
+                            ),
+                            new Run(new Text("A long block of text that will span all three columns of the table!"))
+                        )
                     )
                 );
 
-                tr1.Append(tc1, tc2, tc3);
-
-                tbl.AppendChild(tr1);
+                tbl.Append(tr1, tr2);
                 body.AppendChild(tbl);
 
                 return true;
