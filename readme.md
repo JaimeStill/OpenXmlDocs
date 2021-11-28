@@ -12,7 +12,11 @@
 
 ## Overview
 
-The intent behind this repository is to capture the required details necessary to automate the process of generating Word documents.
+Developing an understanding of the [OpenXML API](https://docs.microsoft.com/en-us/office/open-xml/working-with-wordprocessingml-documents) ([API Repository](https://github.com/OfficeDev/Open-XML-SDK)), particularly related to automating Wordprocessing documents.
+
+The intent here is to be able to develop data structures and an API that facilitates the creation of document templates stored in a database. These templates can then be used to generate document instances (also stored in a database) that can be rendered and completed via a web interface. The data structures generated on the client as JSON data can then be sent to the server and passed into the API to generate OpenXML-based documents.
+
+The end state being that we can begin to digitize the formal data centered around workflows and staffing processes within our organization. Not only will this free the data from being locked behind programatically difficult (sometimes impossible) to read binary files, it allows get away from reliance on the proprietary and expensive PDF format.
 
 > Beginning to iron out some patterns and naming standards for abstracting repeatable behaviors that make working with the SDK way quicker.
 
