@@ -1,6 +1,19 @@
 # Research Notes
 
+* [Abstraction Strategy](#abstraction-strategy)
+* [API Documentation Epiphany](#api-documentation-epiphany)
+* [Default and Named Styles](#default-and-named-styles)
+* [Image Metadata](#image-metadata)
+
+## Abstraction Strategy
+[Back to Top](#research-notes)  
+
+> In progress, check back soon!
+>
+> I've started to iron out a strategy for abstracting complex API interactions into my own API. Check out the infrastructure in the [`Models`](./Models) and [`Extensions`](./Extensions) directories. The next step will be to build more robust classes and methods that allow for a more LINQ-style API vs. the current onion method call approach.
+
 ## API Documentation Epiphany
+[Back to Top](#research-notes)
 
 Working through understandning the OpenXML library has really opened my eyes to how important it is for an API to be intuitive and that you don't have to document everything. If your documentation does an adequate job of orienting you to how the API works, then you should be able to intuitively figure out what you need to accomplish for most given tasks thereafter. What follows is an example of this approach.
 
@@ -163,6 +176,7 @@ In order to see the XML that was generated, change the file extension for the do
 Notice in the final table cell, the only `<w:tc>` within the last `<w:tr>` element, that the table cell properties define `<w:gridSpan w:val="3" />`, indicating that the cell should span all three of the available columns.
 
 ## Default and Named Styles
+[Back to Top](#research-notes)  
 
 > In progress, check back soon!
 >
@@ -170,10 +184,11 @@ Notice in the final table cell, the only `<w:tc>` within the last `<w:tr>` eleme
 >
 > There are articles on defining and applying styles in the documentation, but they are kind of a mess and do not clearly illustrate how to work with the API to define default styles. None of the articles (at the time of writing!) cover how to work with the [`DocDefaults`](https://docs.microsoft.com/en-us/dotnet/api/documentformat.openxml.wordprocessing.docdefaults?view=openxml-2.8.1), [`ParagraphPropertiesDefault`](https://docs.microsoft.com/en-us/dotnet/api/documentformat.openxml.wordprocessing.paragraphpropertiesdefault?view=openxml-2.8.1), or [`RunPropertiesDefault`](https://docs.microsoft.com/en-us/dotnet/api/documentformat.openxml.wordprocessing.runpropertiesdefault?view=openxml-2.8.1) classes; instead, I was fortunate to find a [test function](https://github.com/OfficeDev/Open-XML-SDK/blob/main/test/DocumentFormat.OpenXml.Tests/ConformanceTest/CommentExPeople/GeneratedDocument.cs#L1007) in the [Open-XML-SDK](https://github.com/OfficeDev/Open-XML-SDK) repository that demonstrates how to use work with these classes.
 >
-> This section will seek to provide comprehensive understanding of working with both default and named styles, as well as how they are generated in the resulting `.docx` format. See the [`InitDefaultStyles`](./Program.cs#L165) method in the meantime.
+> This section will seek to provide comprehensive understanding of working with both default and named styles, as well as how they are generated in the resulting `.docx` format. See the [`InitStyles`](./Extensions/App.cs#L52) and [`InitThemeDefaults`](./Extensions/App.cs#L75) methods in the meantime.
 
 ## Image Metadata
+[Back to Top](#research-notes)  
 
 > In progress, check back soon!
 >
-> See Scott Hanselman's article [How do you use System.Drawing in .NET Core?](https://www.hanselman.com/blog/how-do-you-use-systemdrawing-in-net-core) for why I chose [Magick.Net](https://github.com/dlemstra/Magick.NET) to retrieve image metadata in [`CalcImageSize`](./Program.cs#L325).
+> See Scott Hanselman's article [How do you use System.Drawing in .NET Core?](https://www.hanselman.com/blog/how-do-you-use-systemdrawing-in-net-core) for why I chose [Magick.Net](https://github.com/dlemstra/Magick.NET) to retrieve image metadata in [`CalcImageSize`](./Extensions/Imager.cs#L60).
