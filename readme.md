@@ -14,7 +14,7 @@
 
 The intent behind this repository is to capture the required details necessary to automate the process of generating Word documents.
 
-> This is a very early stage in the R&D process, and the bare minimum is demonstrated here. I can now begin to identify an API for automating the generation of documents based on data received through a Web API.
+> Beginning to iron out some patterns and naming standards for abstracting repeatable behaviors that make working with the SDK way quicker.
 
 ## Running and Debugging
 
