@@ -184,11 +184,11 @@ Notice in the final table cell, the only `<w:tc>` within the last `<w:tr>` eleme
 >
 > There are articles on defining and applying styles in the documentation, but they are kind of a mess and do not clearly illustrate how to work with the API to define default styles. None of the articles (at the time of writing!) cover how to work with the [`DocDefaults`](https://docs.microsoft.com/en-us/dotnet/api/documentformat.openxml.wordprocessing.docdefaults?view=openxml-2.8.1), [`ParagraphPropertiesDefault`](https://docs.microsoft.com/en-us/dotnet/api/documentformat.openxml.wordprocessing.paragraphpropertiesdefault?view=openxml-2.8.1), or [`RunPropertiesDefault`](https://docs.microsoft.com/en-us/dotnet/api/documentformat.openxml.wordprocessing.runpropertiesdefault?view=openxml-2.8.1) classes; instead, I was fortunate to find a [test function](https://github.com/OfficeDev/Open-XML-SDK/blob/main/test/DocumentFormat.OpenXml.Tests/ConformanceTest/CommentExPeople/GeneratedDocument.cs#L1007) in the [Open-XML-SDK](https://github.com/OfficeDev/Open-XML-SDK) repository that demonstrates how to use work with these classes.
 >
-> This section will seek to provide comprehensive understanding of working with both default and named styles, as well as how they are generated in the resulting `.docx` format. See the [`InitStyles`](./Extensions/App.cs#L52) and [`InitThemeDefaults`](./Extensions/App.cs#L75) methods in the meantime.
+> This section will seek to provide comprehensive understanding of working with both default and named styles, as well as how they are generated in the resulting `.docx` format. See the [`InitStyles`](./OpenXmlDocs/Extensions/App.cs#L52) and [`InitThemeDefaults`](./OpenXmlDocs/Extensions/App.cs#L75) methods in the meantime.
 
 ## Image Metadata
 [Back to Top](#research-notes)  
 
 > In progress, check back soon!
 >
-> See Scott Hanselman's article [How do you use System.Drawing in .NET Core?](https://www.hanselman.com/blog/how-do-you-use-systemdrawing-in-net-core) for why I chose [Magick.Net](https://github.com/dlemstra/Magick.NET) to retrieve image metadata in [`CalcImageSize`](./Extensions/Imager.cs#L60).
+> See Scott Hanselman's article [How do you use System.Drawing in .NET Core?](https://www.hanselman.com/blog/how-do-you-use-systemdrawing-in-net-core) for why I chose [Magick.Net](https://github.com/dlemstra/Magick.NET) to retrieve image metadata in [`CalcImageSize`](./OpenXmlDocs/Extensions/Imager.cs#L60).

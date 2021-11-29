@@ -16,6 +16,24 @@
             // For more information about the 'console' field, see https://aka.ms/VSCode-CS-LaunchJson-Console
             "console": "internalConsole",
             "stopAtEntry": false
+        },
+        {
+            "name": "Debug API",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "BuildApi",
+            "program": "${workspaceFolder}/doc-builder/server/DocBuilder.Web/bin/Debug/net6.0/DocBuilder.Web.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}/doc-builder/server/DocBuilder.Web",
+            "stopAtEntry": false,
+            "serverReadyAction": {
+                "action": "openExternally",
+                "pattern": "\\bNow listening on:\\s+(http://\\S+)",
+                "uriFormat": "%s/swagger"
+            },
+            "env": {
+                "ASPNETCORE_ENVIRONMENT": "Development"
+            }
         }
     ]
 }
