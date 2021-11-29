@@ -44,7 +44,7 @@ namespace OpenXmlDocs.Extensions
 
         public static string InitPath(string title)
         {
-            var path = Path.Join(Environment.CurrentDirectory, title);
+            var path = Path.Join(Environment.CurrentDirectory, "OpenXmlDocs", title);
             if (File.Exists(path)) File.Delete(path);
 
             return path;

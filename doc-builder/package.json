@@ -1,0 +1,42 @@
+{
+  "name": "doc-builder",
+  "version": "0.0.1",
+  "scripts": {
+    "ng": "ng",
+    "build": "ng build",
+    "build:core": "ng build core",
+    "start": "ng serve --configuration development",
+    "watch": "ng build core --watch --configuration development",
+    "restore:server": "dotnet restore ./server",
+    "watch:server": "dotnet watch --project ./server/DocBuilder.Web",
+    "seed": "dotnet run --project ./server/dbseeder -- \"Server=.\\DevSql;Database=doc-builder-dev;Trusted_Connection=True;\"",
+    "update:db": "dotnet ef database update -s ./server/DocBuilder.Web"
+  },
+  "private": true,
+  "dependencies": {
+    "@angular/animations": "^13.0.2",
+    "@angular/cdk": "^13.0.2",
+    "@angular/common": "^13.0.2",
+    "@angular/compiler": "^13.0.2",
+    "@angular/core": "^13.0.2",
+    "@angular/flex-layout": "^13.0.0-beta.36",
+    "@angular/forms": "^13.0.2",
+    "@angular/material": "^13.0.2",
+    "@angular/platform-browser": "^13.0.2",
+    "@angular/platform-browser-dynamic": "^13.0.2",
+    "@angular/router": "^13.0.2",
+    "hammerjs": "^2.0.8",
+    "rxjs": "^7.4.0",
+    "tslib": "^2.3.1",
+    "zone.js": "^0.11.4"
+  },
+  "devDependencies": {
+    "@angular-devkit/build-angular": "^13.0.3",
+    "@angular/cli": "^13.0.3",
+    "@angular/compiler-cli": "^13.0.2",
+    "@angular/language-service": "^13.0.2",
+    "@types/node": "^16.11.10",
+    "ng-packagr": "^13.0.8",
+    "typescript": "4.4.3"
+  }
+}
