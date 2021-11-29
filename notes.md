@@ -10,7 +10,7 @@
 
 > In progress, check back soon!
 >
-> I've started to iron out a strategy for abstracting complex API interactions into my own API. Check out the infrastructure in the [`Models`](./Models) and [`Extensions`](./Extensions) directories. The next step will be to build more robust classes and methods that allow for a more LINQ-style API vs. the current onion method call approach.
+> I've started to iron out a strategy for abstracting complex API interactions into my own API. Check out the infrastructure in the [`Models`](./OpenXmlDocs/Models) and [`Extensions`](./OpenXmlDocs/Extensions) directories. The next step will be to build more robust classes and methods that allow for a more LINQ-style API vs. the current onion method call approach.
 
 ## API Documentation Epiphany
 [Back to Top](#research-notes)
@@ -23,7 +23,7 @@ In the [API Reference](https://docs.microsoft.com/en-us/dotnet/api/overview/open
 
 ![span-search](./assets/notes/span-search.png)
 
-I've learned that since I'm working specifically with **Wordprocessing**, the [`GridSpan`]() property of the [`TableCellProperties`](https://docs.microsoft.com/en-us/dotnet/api/documentformat.openxml.wordprocessing.tablecellproperties?view=openxml-2.8.1) class should be the result relevant to what I'm looking for:
+I've learned that since I'm working specifically with **Wordprocessing**, the [`GridSpan`](https://docs.microsoft.com/en-us/dotnet/api/documentformat.openxml.wordprocessing.tablecellproperties.gridspan?view=openxml-2.8.1) property of the [`TableCellProperties`](https://docs.microsoft.com/en-us/dotnet/api/documentformat.openxml.wordprocessing.tablecellproperties?view=openxml-2.8.1) class should be the result relevant to what I'm looking for:
 
 ![grid-span-prop](./assets/notes/grid-span-prop.png)
 

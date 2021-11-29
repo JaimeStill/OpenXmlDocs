@@ -2,6 +2,7 @@
 
 * [Overview](#overview)
 * [Running and Debugging](#running-and-debugging)
+    * [OpenXmlDocs](#openxmldocs)
 * [Research Notes](./notes.md)  
     * [API Documentation Epiphany](./notes.md#api-documentation-epiphany)
     * [Default and Defined Styles](./notes.md#default-and-defined-styles)
@@ -21,6 +22,8 @@ The end state being that we can begin to digitize the formal data centered aroun
 > Beginning to iron out some patterns and naming standards for abstracting repeatable behaviors that make working with the SDK way quicker.
 
 ## Running and Debugging
+
+### OpenXmlDocs
 
 This application is a simple .NET 6 console application. As long as you have the [.NET 6 SDK](https://dotnet.microsoft.com/download/dotnet/6.0) installed, you will be able to run the application by calling `dotnet build` from the terminal in VS Code. You can optionally pass in an argument that provides a name for the `.docx` file generated in `Environment.CurrentDirectory`:
 

@@ -43,7 +43,10 @@ namespace OpenXmlDocs
                 "some more sub-details"
             );
 
-            var para = Builder.GenerateParagraph(new Text("This was generated automatically!"));
+            var para = Builder.GenerateParagraph(
+                new Text("This document was generated programmatically."),
+                    runStyle: () => new RunProperties(new Italic(), new Bold())
+                );
 
             doc.Append(card, para);
 
@@ -76,7 +79,7 @@ namespace OpenXmlDocs
                 Layout.Row(row => row.Append(
                     Layout.Content(
                         Builder.GenerateParagraph(
-                            new Text("A long block of text that will span all three columns of the table!"),
+                            new Text("A long block of text that will span all three columns of the table."),
                             () => new ParagraphProperties(new Justification() { Val = JustificationValues.Center })
                         ),
                         () => new TableCellProperties(
@@ -115,8 +118,7 @@ namespace OpenXmlDocs
 
             doc.Append(
                 Builder.GenerateParagraph(
-                    new Text("This document has been modified programmatically!"),
-                    runStyle: () => new RunProperties(new Italic(), new Bold())
+                    new Text("This document was modified programmatically.")
                 ),
                 layout,
                 demo
