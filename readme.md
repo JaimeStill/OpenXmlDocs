@@ -9,12 +9,12 @@
     * [Default and Defined Styles](./notes.md#default-and-defined-styles)
     * [Image Metadata](./notes.md#image-metadata)
 
-![example](./assets/example-light.png#gh-light-mode-only)
-![example](./assets/example-dark.png#gh-dark-mode-only)
-
 ## Status
 
 Applying the knowledge gained from building out the [OpenXmlDocs](./OpenXmlDocs) project into a fullstack [.NET 6 / Angular 13 app](./doc-builder) that accomplishes my higher vision of automating document generation for web-based documents stored in a SQL database.
+
+![example](./assets/example-light.png#gh-light-mode-only)
+![example](./assets/example-dark.png#gh-dark-mode-only)
 
 ## Overview
 
