@@ -25,5 +25,7 @@ Command | Description
 `start` | Starts the *doc-builder* Angular app at `http://localhost:3000`
 `watch` | Builds the *core* library in watch mode to prevent subsequent builds
 `restore:server` | Restores the server NuGet package dependencies
+`start:server` | Builds and runs the server at `http://localhost:5000`
 `watch:server` | Builds and starts the server in watch mode at `http://localhost:5000`
 `seed` | Applies database migrations and seeds the database by running the [dbseeder](./server/dbseeder/Program.cs) utility, which executes the [DbInitailizer.Initialize](./server/DocBuilder.Data/Extensions/DbInitailizer.cs#L7) method.
+`update:db` | Applies database migrations to the target database
