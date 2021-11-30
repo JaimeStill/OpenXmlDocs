@@ -8,7 +8,7 @@
     "start": "ng serve --configuration development",
     "watch": "ng build core --watch --configuration development",
     "restore:server": "dotnet restore ./server",
-    "watch:server": "dotnet watch --project ./server/DocBuilder.Web",
+    "start:server": "dotnet run --project ./server/DocBuilder.Web",
     "seed": "dotnet run --project ./server/dbseeder -- \"Server=.\\DevSql;Database=doc-builder-dev;Trusted_Connection=True;\"",
     "update:db": "dotnet ef database update -s ./server/DocBuilder.Web"
   },
