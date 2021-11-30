@@ -11,7 +11,7 @@ builder.Services.AddCors();
 
 builder.Services
   .AddControllers()
-  .AddOData(options => options.Count().Expand().Filter().OrderBy().Select().SkipToken().SetMaxTop(100))
+  .AddOData(options => options.Count().OrderBy().Select().SetMaxTop(100))
   .AddJsonOptions(options =>
   {
       options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
