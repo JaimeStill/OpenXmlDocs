@@ -1,6 +1,7 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using DocBuilder.Data;
+using Microsoft.AspNetCore.OData;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -8,7 +9,9 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddCors();
 
-builder.Services.AddControllers()
+builder.Services
+  .AddControllers()
+  .AddOData(options => options.Count().Expand().Filter().OrderBy().Select().SkipToken().SetMaxTop(100))
   .AddJsonOptions(options =>
   {
       options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
