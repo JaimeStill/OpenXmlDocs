@@ -44,15 +44,32 @@ namespace DocBuilder.Data.Extensions
                 .SetIncludes()
                 .FirstOrDefaultAsync(x => x.Id == id);
 
+        public static async Task<Doc> Clone(this Doc doc, AppDbContext db)
+        {
+            var clone = new Doc(doc.Name)
+            {
+                CategoryId = doc.CategoryId,
+                Description = doc.Description,
+                Items = await doc.CloneItems(db)
+            };
+
+            await db.Docs.AddAsync(clone);
+            await db.SaveChangesAsync();
+
+            return clone;
+        }
+
         public static async Task<SaveResult> Save(this Doc doc, AppDbContext db)
         {
             var res = await doc.Validate(db);
 
-            if (doc.Id > 0)
-                await doc.Update(db);
-            else
-                await doc.Add(db);
-
+            if (res.IsValid)
+            {
+                if (doc.Id > 0)
+                    await doc.Update(db);
+                else
+                    await doc.Add(db);
+            }
 
             return res;
         }
@@ -61,6 +78,32 @@ namespace DocBuilder.Data.Extensions
         {
             db.Docs.Remove(doc);
             await db.SaveChangesAsync();
+        }
+
+        static async Task<ICollection<DocItem>> CloneItems(this Doc doc, AppDbContext db)
+        {
+            var items = await db.DocItems
+                .Include(x => x.Answer)
+                .Include(x => x.Options)
+                .ToListAsync();
+
+            var cloned = new List<DocItem>();
+
+            foreach (var item in items)
+            {
+                cloned.Add(new DocItem(item.Value, item.Type)
+                {
+                    AllowMultiple = item.AllowMultiple,
+                    Index = item.Index,
+                    IsDropdown = item.IsDropdown,
+                    Options = item.Options.Select(x => new DocOption(x.Value)).ToList(),
+                    Answer = item.Answer == null
+                        ? null
+                        : new DocAnswer(item.Answer.Value)
+                });
+            }
+
+            return cloned;
         }
 
         static async Task Add(this Doc doc, AppDbContext db)
@@ -170,8 +213,8 @@ namespace DocBuilder.Data.Extensions
                 );
 
             return check is null
-                ? new SaveResult { IsValid = false, Message = $"Category {category.Value} is already in use."}
-                : new SaveResult { IsValid = true };
+                ? new SaveResult { IsValid = true }
+                : new SaveResult { IsValid = false, Message = $"Category {category.Value} is already in use." };
         }
 
         #endregion
@@ -192,10 +235,13 @@ namespace DocBuilder.Data.Extensions
         {
             var res = item.Validate();
 
-            if (item.Id > 0)
-                await item.Update(db);
-            else
-                await item.Add(db);
+            if (res.IsValid)
+            {
+                if (item.Id > 0)
+                    await item.Update(db);
+                else
+                    await item.Add(db);
+            }
 
             return res;
         }
@@ -257,10 +303,13 @@ namespace DocBuilder.Data.Extensions
         {
             var res = await option.Validate(db);
 
-            if (option.Id > 0)
-                await option.Update(db);
-            else
-                await option.Add(db);
+            if (res.IsValid)
+            {
+                if (option.Id > 0)
+                    await option.Update(db);
+                else
+                    await option.Add(db);
+            }
 
             return res;
         }
@@ -294,8 +343,13 @@ namespace DocBuilder.Data.Extensions
             var check = await db.DocOptions
                 .FirstOrDefaultAsync(x =>
                     x.Id != option.Id
+                    && x.Value.ToLower() == option.Value.ToLower()
                 );
-            return new SaveResult { IsValid = true };
+
+
+            return check is null
+                ? new SaveResult { IsValid = true }
+                : new SaveResult { IsValid = false, Message = $"Option {option.Value} is already used in this Select Item."};
         }
 
         static SaveResult Validate(this DocOption option)
@@ -336,10 +390,13 @@ namespace DocBuilder.Data.Extensions
         {
             var res = answer.Validate();
 
-            if (answer.Id > 0)
-                await answer.Update(db);
-            else
-                await answer.Add(db);
+            if (res.IsValid)
+            {
+                if (answer.Id > 0)
+                    await answer.Update(db);
+                else
+                    await answer.Add(db);
+            }
 
             return res;
         }

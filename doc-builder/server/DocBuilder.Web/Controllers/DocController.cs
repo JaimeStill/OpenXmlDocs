@@ -32,6 +32,9 @@ namespace DocBuilder.Web.Controllers
         public async Task<Doc?> GetDoc([FromRoute]int id) => await db.GetDoc(id);
 
         [HttpPost("[action]")]
+        public async Task<Doc> CloneDoc([FromBody]Doc doc) => await doc.Clone(db);
+
+        [HttpPost("[action]")]
         public async Task<SaveResult> SaveDoc([FromBody]Doc doc) => await doc.Save(db);
 
         [HttpPost("[action]")]
