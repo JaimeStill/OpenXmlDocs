@@ -44,32 +44,32 @@ namespace DocBuilder.Data.Extensions
                 .SetIncludes()
                 .FirstOrDefaultAsync(x => x.Id == id);
 
-        public static async Task<SaveResult> SaveDoc(this AppDbContext db, Doc doc)
+        public static async Task<SaveResult> Save(this Doc doc, AppDbContext db)
         {
             var res = await doc.Validate(db);
 
             if (doc.Id > 0)
-                await db.UpdateDoc(doc);
+                await doc.Update(db);
             else
-                await db.AddDoc(doc);
+                await doc.Add(db);
 
 
             return res;
         }
 
-        public static async Task RemoveDoc(this AppDbContext db, Doc doc)
+        public static async Task Remove(this Doc doc, AppDbContext db)
         {
             db.Docs.Remove(doc);
             await db.SaveChangesAsync();
         }
 
-        static async Task AddDoc(this AppDbContext db, Doc doc)
+        static async Task Add(this Doc doc, AppDbContext db)
         {
             await db.Docs.AddAsync(doc);
             await db.SaveChangesAsync();
         }
 
-        static async Task UpdateDoc(this AppDbContext db, Doc doc)
+        static async Task Update(this Doc doc, AppDbContext db)
         {
             db.Docs.Update(doc);
             await db.SaveChangesAsync();
@@ -123,34 +123,34 @@ namespace DocBuilder.Data.Extensions
             await db.DocCategories
                 .FindAsync(id);
 
-        public static async Task<SaveResult> SaveDocCategory(this AppDbContext db, DocCategory category)
+        public static async Task<SaveResult> Save(this DocCategory category, AppDbContext db)
         {
             var res = await category.Validate(db);
 
             if (res.IsValid)
             {
                 if (category.Id > 0)
-                    await db.UpdateDocCategory(category);
+                    await category.Update(db);
                 else
-                    await db.AddDocCategory(category);
+                    await category.Add(db);
             }
 
             return res;
         }
 
-        public static async Task RemoveDocCategory(this AppDbContext db, DocCategory category)
+        public static async Task Remove(this DocCategory category, AppDbContext db)
         {
             db.DocCategories.Remove(category);
             await db.SaveChangesAsync();
         }
 
-        static async Task AddDocCategory(this AppDbContext db, DocCategory category)
+        static async Task Add(this DocCategory category, AppDbContext db)
         {
             await db.DocCategories.AddAsync(category);
             await db.SaveChangesAsync();
         }
 
-        static async Task UpdateDocCategory(this AppDbContext db, DocCategory category)
+        static async Task Update(this DocCategory category, AppDbContext db)
         {
             db.DocCategories.Update(category);
             await db.SaveChangesAsync();
@@ -188,31 +188,31 @@ namespace DocBuilder.Data.Extensions
             await db.DocItems
                 .FindAsync(id);
 
-        public static async Task<SaveResult> SaveDocItem(this AppDbContext db, DocItem item)
+        public static async Task<SaveResult> Save(this DocItem item, AppDbContext db)
         {
             var res = item.Validate();
 
             if (item.Id > 0)
-                await db.UpdateDocItem(item);
+                await item.Update(db);
             else
-                await db.AddDocItem(item);
+                await item.Add(db);
 
             return res;
         }
 
-        public static async Task RemoveDocItem(this AppDbContext db, DocItem item)
+        public static async Task Remove(this DocItem item, AppDbContext db)
         {
             db.DocItems.Remove(item);
             await db.SaveChangesAsync();
         }
 
-        static async Task AddDocItem(this AppDbContext db, DocItem item)
+        static async Task Add(this DocItem item, AppDbContext db)
         {
             await db.DocItems.AddAsync(item);
             await db.SaveChangesAsync();
         }
 
-        static async Task UpdateDocItem(this AppDbContext db, DocItem item)
+        static async Task Update(this DocItem item, AppDbContext db)
         {
             db.DocItems.Update(item);
             await db.SaveChangesAsync();
@@ -225,6 +225,150 @@ namespace DocBuilder.Data.Extensions
 
             if (string.IsNullOrEmpty(item.Value))
                 return new SaveResult { IsValid = false, Message = "An Item must have a value." };
+
+            if (item.Type == DocItemType.Select && item.Id < 1)
+            {
+                if (item.Options.Count < 1)
+                    return new SaveResult { IsValid = false, Message = "A new Select Item must contain at least one Option." };
+
+                var res = item.Options.Validate();
+
+                if (!res.IsValid) return res;
+            }
+
+            return new SaveResult { IsValid = true };
+        }
+
+        #endregion
+
+        #region Option
+
+        public static async Task<List<DocOption>> GetDocOptions(this AppDbContext db, int selectId) =>
+            await db.DocOptions
+                .Where(x => x.DocItemId == selectId)
+                .OrderBy(x => x.Value)
+                .ToListAsync();
+
+        public static async Task<DocOption?> GetDocOption(this AppDbContext db, int id) =>
+            await db.DocOptions
+                .FindAsync(id);
+
+        public static async Task<SaveResult> Save(this DocOption option, AppDbContext db)
+        {
+            var res = await option.Validate(db);
+
+            if (option.Id > 0)
+                await option.Update(db);
+            else
+                await option.Add(db);
+
+            return res;
+        }
+
+        public static async Task Remove(this DocOption option, AppDbContext db)
+        {
+            db.DocOptions.Remove(option);
+            await db.SaveChangesAsync();
+        }
+
+        static async Task Add(this DocOption option, AppDbContext db)
+        {
+            await db.DocOptions.AddAsync(option);
+            await db.SaveChangesAsync();
+        }
+
+        static async Task Update(this DocOption option, AppDbContext db)
+        {
+            db.DocOptions.Update(option);
+            await db.SaveChangesAsync();
+        }
+
+        static async Task<SaveResult> Validate(this DocOption option, AppDbContext db)
+        {
+            if (string.IsNullOrEmpty(option.Value))
+                return new SaveResult { IsValid = false, Message = "An Option must have a value." };
+
+            if (option.DocItemId < 1)
+                return new SaveResult { IsValid = false, Message = "An Option must be associated with a Select Item." };
+
+            var check = await db.DocOptions
+                .FirstOrDefaultAsync(x =>
+                    x.Id != option.Id
+                );
+            return new SaveResult { IsValid = true };
+        }
+
+        static SaveResult Validate(this DocOption option)
+        {
+            if (string.IsNullOrEmpty(option.Value))
+                return new SaveResult { IsValid = false, Message = "An Option must have a value." };
+
+            return new SaveResult { IsValid = true };
+        }
+
+        static SaveResult Validate(this ICollection<DocOption> options)
+        {
+            foreach (var option in options)
+            {
+                var res = option.Validate();
+                if (!res.IsValid) return res;
+
+                if (options.Count(x => x.Value.ToLower() == option.Value.ToLower()) > 1)
+                    return new SaveResult
+                    {
+                        IsValid = false,
+                        Message = "Values in a Select Item Options List must be distinct."
+                    };
+            }
+
+            return new SaveResult { IsValid = true };
+        }
+
+        #endregion
+
+        #region Answer
+
+        public static async Task<DocAnswer?> GetDocAnswer(this AppDbContext db, int questionId) =>
+            await db.DocAnswers
+                .FirstOrDefaultAsync(x => x.DocItemId == questionId);
+
+        public static async Task<SaveResult> Save(this DocAnswer answer, AppDbContext db)
+        {
+            var res = answer.Validate();
+
+            if (answer.Id > 0)
+                await answer.Update(db);
+            else
+                await answer.Add(db);
+
+            return res;
+        }
+
+        public static async Task Remove(this DocAnswer answer, AppDbContext db)
+        {
+            db.DocAnswers.Remove(answer);
+            await db.SaveChangesAsync();
+        }
+
+        static async Task Add(this DocAnswer answer, AppDbContext db)
+        {
+            await db.DocAnswers.AddAsync(answer);
+            await db.SaveChangesAsync();
+        }
+
+        static async Task Update(this DocAnswer answer, AppDbContext db)
+        {
+            db.DocAnswers.Update(answer);
+            await db.SaveChangesAsync();
+        }
+
+        static SaveResult Validate(this DocAnswer answer)
+        {
+            if (string.IsNullOrEmpty(answer.Value))
+                return new SaveResult { IsValid = false, Message = "An Answer must have a value." };
+
+            if (answer.DocItemId < 1)
+                return new SaveResult { IsValid = false, Message = "An Answer must be associated with a Question Item." };
 
             return new SaveResult { IsValid = true };
         }

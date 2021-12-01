@@ -1,6 +1,6 @@
 namespace DocBuilder.Data.Entities
 {
-    public class TDoc
+    public class DocT
     {
         public int Id { get; set; }
         public int CategoryId { get; set; }
@@ -9,9 +9,9 @@ namespace DocBuilder.Data.Entities
 
         public DocCategory? Category { get; set; }
 
-        public ICollection<TDocItem> Items { get; set; } = new List<TDocItem>();
+        public ICollection<DocItemT> Items { get; set; } = new List<DocItemT>();
 
-        public TDoc(string name)
+        public DocT(string name)
         {
             Name = name;
         }

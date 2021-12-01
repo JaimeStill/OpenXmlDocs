@@ -1,5 +1,6 @@
 using DocBuilder.Data.Entities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DocBuilder.Data
 {
@@ -8,13 +9,13 @@ namespace DocBuilder.Data
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
         public DbSet<Doc> Docs => Set<Doc>();
+        public DbSet<DocT> DocTs => Set<DocT>();
         public DbSet<DocAnswer> DocAnswers => Set<DocAnswer>();
         public DbSet<DocCategory> DocCategories => Set<DocCategory>();
         public DbSet<DocItem> DocItems => Set<DocItem>();
+        public DbSet<DocItemT> DocItemTs => Set<DocItemT>();
         public DbSet<DocOption> DocOptions => Set<DocOption>();
-        public DbSet<TDoc> TDocs => Set<TDoc>();
-        public DbSet<TDocItem> TDocItems => Set<TDocItem>();
-        public DbSet<TDocOption> TDocOptions => Set<TDocOption>();
+        public DbSet<DocOptionT> DocOptionTs => Set<DocOptionT>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -22,6 +23,12 @@ namespace DocBuilder.Data
                 .Entity<Doc>()
                 .HasOne(x => x.Category)
                 .WithMany(x => x.Docs)
+                .HasForeignKey(x => x.CategoryId);
+
+            modelBuilder
+                .Entity<DocT>()
+                .HasOne(x => x.Category)
+                .WithMany(x => x.DocTs)
                 .HasForeignKey(x => x.CategoryId);
 
             modelBuilder
@@ -45,36 +52,27 @@ namespace DocBuilder.Data
                 );
 
             modelBuilder
+                .Entity<DocItemT>()
+                .HasOne(x => x.DocT)
+                .WithMany(x => x.Items)
+                .HasForeignKey(x => x.DocTId);
+
+            modelBuilder
+                .Entity<DocItemT>()
+                .Property(x => x.Type)
+                .HasConversion(new EnumToStringConverter<DocItemType>());
+
+            modelBuilder
                 .Entity<DocOption>()
                 .HasOne(x => x.DocItem)
                 .WithMany(x => x.Options)
                 .HasForeignKey(x => x.DocItemId);
 
             modelBuilder
-                .Entity<TDoc>()
-                .HasOne(x => x.Category)
-                .WithMany(x => x.TDocs)
-                .HasForeignKey(x => x.CategoryId);
-
-            modelBuilder
-                .Entity<TDocItem>()
-                .HasOne(x => x.TDoc)
-                .WithMany(x => x.Items)
-                .HasForeignKey(x => x.TDocId);
-
-            modelBuilder
-                .Entity<TDocItem>()
-                .Property(x => x.Type)
-                .HasConversion(
-                    x => x.ToString(),
-                    x => (DocItemType)Enum.Parse(typeof(DocItemType), x)
-                );
-
-            modelBuilder
-                .Entity<TDocOption>()
-                .HasOne(x => x.TDocItem)
+                .Entity<DocOptionT>()
+                .HasOne(x => x.DocItemT)
                 .WithMany(x => x.Options)
-                .HasForeignKey(x => x.TDocItemId);
+                .HasForeignKey(x => x.DocItemTId);
 
             modelBuilder
                 .Model
