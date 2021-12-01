@@ -54,7 +54,7 @@ namespace DocBuilder.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<int>("QuestionId")
+                    b.Property<int>("DocItemId")
                         .HasColumnType("int");
 
                     b.Property<string>("Value")
@@ -63,7 +63,7 @@ namespace DocBuilder.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("QuestionId")
+                    b.HasIndex("DocItemId")
                         .IsUnique();
 
                     b.ToTable("DocAnswer", (string)null);
@@ -94,13 +94,23 @@ namespace DocBuilder.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
+                    b.Property<bool>("AllowMultiple")
+                        .HasColumnType("bit");
+
                     b.Property<int>("DocId")
                         .HasColumnType("int");
 
                     b.Property<int>("Index")
                         .HasColumnType("int");
 
+                    b.Property<bool>("IsDropdown")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Value")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -109,8 +119,6 @@ namespace DocBuilder.Data.Migrations
                     b.HasIndex("DocId");
 
                     b.ToTable("DocItem", (string)null);
-
-                    b.HasDiscriminator<string>("Type").HasValue("doc-item");
                 });
 
             modelBuilder.Entity("DocBuilder.Data.Entities.DocOption", b =>
@@ -121,7 +129,7 @@ namespace DocBuilder.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<int>("SelectId")
+                    b.Property<int>("DocItemId")
                         .HasColumnType("int");
 
                     b.Property<bool>("Selected")
@@ -133,7 +141,7 @@ namespace DocBuilder.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("SelectId");
+                    b.HasIndex("DocItemId");
 
                     b.ToTable("DocOption", (string)null);
                 });
@@ -171,8 +179,14 @@ namespace DocBuilder.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
+                    b.Property<bool>("AllowMultiple")
+                        .HasColumnType("bit");
+
                     b.Property<int>("Index")
                         .HasColumnType("int");
+
+                    b.Property<bool>("IsDropdown")
+                        .HasColumnType("bit");
 
                     b.Property<int>("TDocId")
                         .HasColumnType("int");
@@ -181,13 +195,15 @@ namespace DocBuilder.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Value")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("TDocId");
 
                     b.ToTable("TDocItem", (string)null);
-
-                    b.HasDiscriminator<string>("Type").HasValue("tdoc-item");
                 });
 
             modelBuilder.Entity("DocBuilder.Data.Entities.TDocOption", b =>
@@ -198,7 +214,7 @@ namespace DocBuilder.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<int>("SelectId")
+                    b.Property<int>("TDocItemId")
                         .HasColumnType("int");
 
                     b.Property<string>("Value")
@@ -207,91 +223,9 @@ namespace DocBuilder.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("SelectId");
+                    b.HasIndex("TDocItemId");
 
                     b.ToTable("TDocOption", (string)null);
-                });
-
-            modelBuilder.Entity("DocBuilder.Data.Entities.DocInfo", b =>
-                {
-                    b.HasBaseType("DocBuilder.Data.Entities.DocItem");
-
-                    b.Property<string>("Value")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasDiscriminator().HasValue("doc-info");
-                });
-
-            modelBuilder.Entity("DocBuilder.Data.Entities.DocQuestion", b =>
-                {
-                    b.HasBaseType("DocBuilder.Data.Entities.DocItem");
-
-                    b.Property<string>("Value")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("DocQuestion_Value");
-
-                    b.HasDiscriminator().HasValue("doc-question");
-                });
-
-            modelBuilder.Entity("DocBuilder.Data.Entities.DocSelect", b =>
-                {
-                    b.HasBaseType("DocBuilder.Data.Entities.DocItem");
-
-                    b.Property<bool>("AllowMultiple")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsDropdown")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Value")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("DocSelect_Value");
-
-                    b.HasDiscriminator().HasValue("doc-select");
-                });
-
-            modelBuilder.Entity("DocBuilder.Data.Entities.TDocInfo", b =>
-                {
-                    b.HasBaseType("DocBuilder.Data.Entities.TDocItem");
-
-                    b.Property<string>("Value")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasDiscriminator().HasValue("tdoc-info");
-                });
-
-            modelBuilder.Entity("DocBuilder.Data.Entities.TDocQuestion", b =>
-                {
-                    b.HasBaseType("DocBuilder.Data.Entities.TDocItem");
-
-                    b.Property<string>("Value")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("TDocQuestion_Value");
-
-                    b.HasDiscriminator().HasValue("tdoc-question");
-                });
-
-            modelBuilder.Entity("DocBuilder.Data.Entities.TDocSelect", b =>
-                {
-                    b.HasBaseType("DocBuilder.Data.Entities.TDocItem");
-
-                    b.Property<bool>("AllowMultiple")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsDropdown")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Value")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)")
-                        .HasColumnName("TDocSelect_Value");
-
-                    b.HasDiscriminator().HasValue("tdoc-select");
                 });
 
             modelBuilder.Entity("DocBuilder.Data.Entities.Doc", b =>
@@ -307,13 +241,13 @@ namespace DocBuilder.Data.Migrations
 
             modelBuilder.Entity("DocBuilder.Data.Entities.DocAnswer", b =>
                 {
-                    b.HasOne("DocBuilder.Data.Entities.DocQuestion", "Question")
+                    b.HasOne("DocBuilder.Data.Entities.DocItem", "DocItem")
                         .WithOne("Answer")
-                        .HasForeignKey("DocBuilder.Data.Entities.DocAnswer", "QuestionId")
+                        .HasForeignKey("DocBuilder.Data.Entities.DocAnswer", "DocItemId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Question");
+                    b.Navigation("DocItem");
                 });
 
             modelBuilder.Entity("DocBuilder.Data.Entities.DocItem", b =>
@@ -329,13 +263,13 @@ namespace DocBuilder.Data.Migrations
 
             modelBuilder.Entity("DocBuilder.Data.Entities.DocOption", b =>
                 {
-                    b.HasOne("DocBuilder.Data.Entities.DocSelect", "Select")
+                    b.HasOne("DocBuilder.Data.Entities.DocItem", "DocItem")
                         .WithMany("Options")
-                        .HasForeignKey("SelectId")
+                        .HasForeignKey("DocItemId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Select");
+                    b.Navigation("DocItem");
                 });
 
             modelBuilder.Entity("DocBuilder.Data.Entities.TDoc", b =>
@@ -362,13 +296,13 @@ namespace DocBuilder.Data.Migrations
 
             modelBuilder.Entity("DocBuilder.Data.Entities.TDocOption", b =>
                 {
-                    b.HasOne("DocBuilder.Data.Entities.TDocSelect", "Select")
+                    b.HasOne("DocBuilder.Data.Entities.TDocItem", "TDocItem")
                         .WithMany("Options")
-                        .HasForeignKey("SelectId")
+                        .HasForeignKey("TDocItemId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Select");
+                    b.Navigation("TDocItem");
                 });
 
             modelBuilder.Entity("DocBuilder.Data.Entities.Doc", b =>
@@ -383,22 +317,19 @@ namespace DocBuilder.Data.Migrations
                     b.Navigation("TDocs");
                 });
 
+            modelBuilder.Entity("DocBuilder.Data.Entities.DocItem", b =>
+                {
+                    b.Navigation("Answer");
+
+                    b.Navigation("Options");
+                });
+
             modelBuilder.Entity("DocBuilder.Data.Entities.TDoc", b =>
                 {
                     b.Navigation("Items");
                 });
 
-            modelBuilder.Entity("DocBuilder.Data.Entities.DocQuestion", b =>
-                {
-                    b.Navigation("Answer");
-                });
-
-            modelBuilder.Entity("DocBuilder.Data.Entities.DocSelect", b =>
-                {
-                    b.Navigation("Options");
-                });
-
-            modelBuilder.Entity("DocBuilder.Data.Entities.TDocSelect", b =>
+            modelBuilder.Entity("DocBuilder.Data.Entities.TDocItem", b =>
                 {
                     b.Navigation("Options");
                 });

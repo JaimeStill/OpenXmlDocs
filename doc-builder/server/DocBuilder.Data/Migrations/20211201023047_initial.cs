@@ -70,13 +70,11 @@ namespace DocBuilder.Data.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     DocId = table.Column<int>(type: "int", nullable: false),
-                    Index = table.Column<int>(type: "int", nullable: false),
                     Type = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Value = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    DocQuestion_Value = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    DocSelect_Value = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    AllowMultiple = table.Column<bool>(type: "bit", nullable: true),
-                    IsDropdown = table.Column<bool>(type: "bit", nullable: true)
+                    Index = table.Column<int>(type: "int", nullable: false),
+                    Value = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    AllowMultiple = table.Column<bool>(type: "bit", nullable: false),
+                    IsDropdown = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -96,13 +94,11 @@ namespace DocBuilder.Data.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     TDocId = table.Column<int>(type: "int", nullable: false),
-                    Index = table.Column<int>(type: "int", nullable: false),
                     Type = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Value = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    TDocQuestion_Value = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    TDocSelect_Value = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    AllowMultiple = table.Column<bool>(type: "bit", nullable: true),
-                    IsDropdown = table.Column<bool>(type: "bit", nullable: true)
+                    Index = table.Column<int>(type: "int", nullable: false),
+                    Value = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    AllowMultiple = table.Column<bool>(type: "bit", nullable: false),
+                    IsDropdown = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -121,15 +117,15 @@ namespace DocBuilder.Data.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    QuestionId = table.Column<int>(type: "int", nullable: false),
+                    DocItemId = table.Column<int>(type: "int", nullable: false),
                     Value = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_DocAnswer", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_DocAnswer_DocItem_QuestionId",
-                        column: x => x.QuestionId,
+                        name: "FK_DocAnswer_DocItem_DocItemId",
+                        column: x => x.DocItemId,
                         principalTable: "DocItem",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -141,7 +137,7 @@ namespace DocBuilder.Data.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    SelectId = table.Column<int>(type: "int", nullable: false),
+                    DocItemId = table.Column<int>(type: "int", nullable: false),
                     Value = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Selected = table.Column<bool>(type: "bit", nullable: false)
                 },
@@ -149,8 +145,8 @@ namespace DocBuilder.Data.Migrations
                 {
                     table.PrimaryKey("PK_DocOption", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_DocOption_DocItem_SelectId",
-                        column: x => x.SelectId,
+                        name: "FK_DocOption_DocItem_DocItemId",
+                        column: x => x.DocItemId,
                         principalTable: "DocItem",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -162,15 +158,15 @@ namespace DocBuilder.Data.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    SelectId = table.Column<int>(type: "int", nullable: false),
+                    TDocItemId = table.Column<int>(type: "int", nullable: false),
                     Value = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_TDocOption", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_TDocOption_TDocItem_SelectId",
-                        column: x => x.SelectId,
+                        name: "FK_TDocOption_TDocItem_TDocItemId",
+                        column: x => x.TDocItemId,
                         principalTable: "TDocItem",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -182,9 +178,9 @@ namespace DocBuilder.Data.Migrations
                 column: "CategoryId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_DocAnswer_QuestionId",
+                name: "IX_DocAnswer_DocItemId",
                 table: "DocAnswer",
-                column: "QuestionId",
+                column: "DocItemId",
                 unique: true);
 
             migrationBuilder.CreateIndex(
@@ -193,9 +189,9 @@ namespace DocBuilder.Data.Migrations
                 column: "DocId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_DocOption_SelectId",
+                name: "IX_DocOption_DocItemId",
                 table: "DocOption",
-                column: "SelectId");
+                column: "DocItemId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_TDoc_CategoryId",
@@ -208,9 +204,9 @@ namespace DocBuilder.Data.Migrations
                 column: "TDocId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_TDocOption_SelectId",
+                name: "IX_TDocOption_TDocItemId",
                 table: "TDocOption",
-                column: "SelectId");
+                column: "TDocItemId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

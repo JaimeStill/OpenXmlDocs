@@ -10,17 +10,11 @@ namespace DocBuilder.Data
         public DbSet<Doc> Docs => Set<Doc>();
         public DbSet<DocAnswer> DocAnswers => Set<DocAnswer>();
         public DbSet<DocCategory> DocCategories => Set<DocCategory>();
-        public DbSet<DocInfo> DocInfos => Set<DocInfo>();
         public DbSet<DocItem> DocItems => Set<DocItem>();
         public DbSet<DocOption> DocOptions => Set<DocOption>();
-        public DbSet<DocQuestion> DocQuestions => Set<DocQuestion>();
-        public DbSet<DocSelect> DocSelects => Set<DocSelect>();
         public DbSet<TDoc> TDocs => Set<TDoc>();
-        public DbSet<TDocInfo> TDocInfos => Set<TDocInfo>();
         public DbSet<TDocItem> TDocItems => Set<TDocItem>();
         public DbSet<TDocOption> TDocOptions => Set<TDocOption>();
-        public DbSet<TDocQuestion> TDocQuestions => Set<TDocQuestion>();
-        public DbSet<TDocSelect> TDocSelects => Set<TDocSelect>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -32,9 +26,9 @@ namespace DocBuilder.Data
 
             modelBuilder
                 .Entity<DocAnswer>()
-                .HasOne(x => x.Question)
+                .HasOne(x => x.DocItem)
                 .WithOne(x => x.Answer)
-                .HasForeignKey<DocAnswer>(x => x.QuestionId);
+                .HasForeignKey<DocAnswer>(x => x.DocItemId);
 
             modelBuilder
                 .Entity<DocItem>()
@@ -44,17 +38,17 @@ namespace DocBuilder.Data
 
             modelBuilder
                 .Entity<DocItem>()
-                .HasDiscriminator<string>(di => di.Type)
-                .HasValue<DocItem>("doc-item")
-                .HasValue<DocInfo>("doc-info")
-                .HasValue<DocQuestion>("doc-question")
-                .HasValue<DocSelect>("doc-select");
+                .Property(x => x.Type)
+                .HasConversion(
+                    x => x.ToString(),
+                    x => (DocItemType)Enum.Parse(typeof(DocItemType), x)
+                );
 
             modelBuilder
                 .Entity<DocOption>()
-                .HasOne(x => x.Select)
+                .HasOne(x => x.DocItem)
                 .WithMany(x => x.Options)
-                .HasForeignKey(x => x.SelectId);
+                .HasForeignKey(x => x.DocItemId);
 
             modelBuilder
                 .Entity<TDoc>()
@@ -70,17 +64,17 @@ namespace DocBuilder.Data
 
             modelBuilder
                 .Entity<TDocItem>()
-                .HasDiscriminator<string>(tdi => tdi.Type)
-                .HasValue<TDocItem>("tdoc-item")
-                .HasValue<TDocInfo>("tdoc-info")
-                .HasValue<TDocQuestion>("tdoc-question")
-                .HasValue<TDocSelect>("tdoc-select");
+                .Property(x => x.Type)
+                .HasConversion(
+                    x => x.ToString(),
+                    x => (DocItemType)Enum.Parse(typeof(DocItemType), x)
+                );
 
             modelBuilder
                 .Entity<TDocOption>()
-                .HasOne(x => x.Select)
+                .HasOne(x => x.TDocItem)
                 .WithMany(x => x.Options)
-                .HasForeignKey(x => x.SelectId);
+                .HasForeignKey(x => x.TDocItemId);
 
             modelBuilder
                 .Model
