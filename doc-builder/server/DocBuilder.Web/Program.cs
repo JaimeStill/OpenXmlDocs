@@ -10,20 +10,18 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddCors();
 
 builder.Services
+  .AddDbContext<AppDbContext>(options =>
+  {
+      options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
+      options.UseSqlServer(builder.Configuration.GetConnectionString("DocBuilder"));
+  })
   .AddControllers()
-  .AddOData(options => options.Count().OrderBy().Select().SetMaxTop(100))
+  .AddOData(options => options.Count().Filter().OrderBy().Select().SetMaxTop(100))
   .AddJsonOptions(options =>
   {
-      options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
       options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
-      options.JsonSerializerOptions.WriteIndented = true;
+      options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
   });
-
-builder.Services.AddDbContext<AppDbContext>(options =>
-{
-    options.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DocBuilder"));
-});
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

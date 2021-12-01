@@ -17,8 +17,47 @@ namespace DocBuilder.Data.Extensions
                 Console.WriteLine("Seeding DocCategories...");
                 var categories = new List<DocCategory>()
                 {
-                    new DocCategory("Request"),
-                    new DocCategory("Assessment"),
+                    new DocCategory("Request")
+                    {
+                        Docs = new List<Doc>
+                        {
+                            new Doc("Account Request")
+                            {
+                                Items = new List<DocItem>
+                                {
+                                    new DocItem("Here is some nonsense.", DocItemType.Item) { Index = 0 },
+                                    new DocItem("How questionable is this?", DocItemType.Question)
+                                    {
+                                        Index = 1,
+                                        Answer = new DocAnswer("It is quite questionable.")
+                                    },
+                                    new DocItem("Make a selection.", DocItemType.Select)
+                                    {
+                                        Index = 2,
+                                        IsDropdown = true,
+                                        Options = new List<DocOption>
+                                        {
+                                            new DocOption("Air"),
+                                            new DocOption("Water"),
+                                            new DocOption("Earth"),
+                                            new DocOption("Fire")
+                                        }
+                                    }
+                                }
+                            },
+                            new Doc("Training Request")
+                        }
+                    },
+                    new DocCategory("Assessment")
+                    {
+                        Docs = new List<Doc>
+                        {
+                            new Doc("Personal Assessment")
+                            {
+                                Description = "Determines candidate goal and value alignment"
+                            }
+                        }
+                    },
                     new DocCategory("Research")
                 };
 
