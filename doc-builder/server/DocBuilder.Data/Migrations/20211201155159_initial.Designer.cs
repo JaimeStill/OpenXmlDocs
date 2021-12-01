@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DocBuilder.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20211201023047_initial")]
+    [Migration("20211201155159_initial")]
     partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -123,6 +123,41 @@ namespace DocBuilder.Data.Migrations
                     b.ToTable("DocItem", (string)null);
                 });
 
+            modelBuilder.Entity("DocBuilder.Data.Entities.DocItemT", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<bool>("AllowMultiple")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("DocTId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Index")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsDropdown")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Value")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DocTId");
+
+                    b.ToTable("DocItemT", (string)null);
+                });
+
             modelBuilder.Entity("DocBuilder.Data.Entities.DocOption", b =>
                 {
                     b.Property<int>("Id")
@@ -148,7 +183,29 @@ namespace DocBuilder.Data.Migrations
                     b.ToTable("DocOption", (string)null);
                 });
 
-            modelBuilder.Entity("DocBuilder.Data.Entities.TDoc", b =>
+            modelBuilder.Entity("DocBuilder.Data.Entities.DocOptionT", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("DocItemTId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Value")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DocItemTId");
+
+                    b.ToTable("DocOptionT", (string)null);
+                });
+
+            modelBuilder.Entity("DocBuilder.Data.Entities.DocT", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -170,64 +227,7 @@ namespace DocBuilder.Data.Migrations
 
                     b.HasIndex("CategoryId");
 
-                    b.ToTable("TDoc", (string)null);
-                });
-
-            modelBuilder.Entity("DocBuilder.Data.Entities.TDocItem", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<bool>("AllowMultiple")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("Index")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("IsDropdown")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("TDocId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Type")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Value")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("TDocId");
-
-                    b.ToTable("TDocItem", (string)null);
-                });
-
-            modelBuilder.Entity("DocBuilder.Data.Entities.TDocOption", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<int>("TDocItemId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Value")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("TDocItemId");
-
-                    b.ToTable("TDocOption", (string)null);
+                    b.ToTable("DocT", (string)null);
                 });
 
             modelBuilder.Entity("DocBuilder.Data.Entities.Doc", b =>
@@ -263,6 +263,17 @@ namespace DocBuilder.Data.Migrations
                     b.Navigation("Doc");
                 });
 
+            modelBuilder.Entity("DocBuilder.Data.Entities.DocItemT", b =>
+                {
+                    b.HasOne("DocBuilder.Data.Entities.DocT", "DocT")
+                        .WithMany("Items")
+                        .HasForeignKey("DocTId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("DocT");
+                });
+
             modelBuilder.Entity("DocBuilder.Data.Entities.DocOption", b =>
                 {
                     b.HasOne("DocBuilder.Data.Entities.DocItem", "DocItem")
@@ -274,37 +285,26 @@ namespace DocBuilder.Data.Migrations
                     b.Navigation("DocItem");
                 });
 
-            modelBuilder.Entity("DocBuilder.Data.Entities.TDoc", b =>
+            modelBuilder.Entity("DocBuilder.Data.Entities.DocOptionT", b =>
+                {
+                    b.HasOne("DocBuilder.Data.Entities.DocItemT", "DocItemT")
+                        .WithMany("Options")
+                        .HasForeignKey("DocItemTId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("DocItemT");
+                });
+
+            modelBuilder.Entity("DocBuilder.Data.Entities.DocT", b =>
                 {
                     b.HasOne("DocBuilder.Data.Entities.DocCategory", "Category")
-                        .WithMany("TDocs")
+                        .WithMany("DocTs")
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Category");
-                });
-
-            modelBuilder.Entity("DocBuilder.Data.Entities.TDocItem", b =>
-                {
-                    b.HasOne("DocBuilder.Data.Entities.TDoc", "TDoc")
-                        .WithMany("Items")
-                        .HasForeignKey("TDocId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("TDoc");
-                });
-
-            modelBuilder.Entity("DocBuilder.Data.Entities.TDocOption", b =>
-                {
-                    b.HasOne("DocBuilder.Data.Entities.TDocItem", "TDocItem")
-                        .WithMany("Options")
-                        .HasForeignKey("TDocItemId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("TDocItem");
                 });
 
             modelBuilder.Entity("DocBuilder.Data.Entities.Doc", b =>
@@ -314,9 +314,9 @@ namespace DocBuilder.Data.Migrations
 
             modelBuilder.Entity("DocBuilder.Data.Entities.DocCategory", b =>
                 {
-                    b.Navigation("Docs");
+                    b.Navigation("DocTs");
 
-                    b.Navigation("TDocs");
+                    b.Navigation("Docs");
                 });
 
             modelBuilder.Entity("DocBuilder.Data.Entities.DocItem", b =>
@@ -326,14 +326,14 @@ namespace DocBuilder.Data.Migrations
                     b.Navigation("Options");
                 });
 
-            modelBuilder.Entity("DocBuilder.Data.Entities.TDoc", b =>
-                {
-                    b.Navigation("Items");
-                });
-
-            modelBuilder.Entity("DocBuilder.Data.Entities.TDocItem", b =>
+            modelBuilder.Entity("DocBuilder.Data.Entities.DocItemT", b =>
                 {
                     b.Navigation("Options");
+                });
+
+            modelBuilder.Entity("DocBuilder.Data.Entities.DocT", b =>
+                {
+                    b.Navigation("Items");
                 });
 #pragma warning restore 612, 618
         }

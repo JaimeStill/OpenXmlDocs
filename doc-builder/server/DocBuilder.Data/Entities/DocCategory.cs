@@ -6,7 +6,7 @@ namespace DocBuilder.Data.Entities
         public string Value { get; set; }
 
         public ICollection<Doc> Docs { get; set; } = new List<Doc>();
-        public ICollection<TDoc> TDocs { get; set; } = new List<TDoc>();
+        public ICollection<DocT> DocTs { get; set; } = new List<DocT>();
 
         public DocCategory(string value)
         {

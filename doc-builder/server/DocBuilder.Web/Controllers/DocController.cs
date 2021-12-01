@@ -32,10 +32,10 @@ namespace DocBuilder.Web.Controllers
         public async Task<Doc?> GetDoc([FromRoute]int id) => await db.GetDoc(id);
 
         [HttpPost("[action]")]
-        public async Task<SaveResult> SaveDoc([FromBody]Doc doc) => await db.SaveDoc(doc);
+        public async Task<SaveResult> SaveDoc([FromBody]Doc doc) => await doc.Save(db);
 
         [HttpPost("[action]")]
-        public async Task RemoveDoc([FromBody]Doc doc) => await db.RemoveDoc(doc);
+        public async Task RemoveDoc([FromBody]Doc doc) => await doc.Remove(db);
 
         #endregion
 
@@ -54,10 +54,10 @@ namespace DocBuilder.Web.Controllers
         public async Task<DocCategory?> GetDocCategory([FromRoute]int id) => await db.GetDocCategory(id);
 
         [HttpPost("[action]")]
-        public async Task<SaveResult> SaveDocCategory([FromBody]DocCategory category) => await db.SaveDocCategory(category);
+        public async Task<SaveResult> SaveDocCategory([FromBody]DocCategory category) => await category.Save(db);
 
         [HttpPost("[action]")]
-        public async Task RemoveDocCategory([FromBody]DocCategory category) => await db.RemoveDocCategory(category);
+        public async Task RemoveDocCategory([FromBody]DocCategory category) => await category.Remove(db);
 
         #endregion
 
@@ -70,10 +70,39 @@ namespace DocBuilder.Web.Controllers
         public async Task<DocItem?> GetDocItem([FromRoute]int id) => await db.GetDocItem(id);
 
         [HttpPost("[action]")]
-        public async Task<SaveResult> SaveDocItem([FromBody]DocItem item) => await db.SaveDocItem(item);
+        public async Task<SaveResult> SaveDocItem([FromBody]DocItem item) => await item.Save(db);
 
         [HttpPost("[action]")]
-        public async Task RemoveDocItem([FromBody]DocItem item) => await db.RemoveDocItem(item);
+        public async Task RemoveDocItem([FromBody]DocItem item) => await item.Remove(db);
+
+        #endregion
+
+        #region Options
+
+        [HttpGet("[action]/{selectId}")]
+        public async Task<List<DocOption>> GetDocOptions([FromRoute]int selectId) => await db.GetDocOptions(selectId);
+
+        [HttpGet("[action]/{id}")]
+        public async Task<DocOption?> GetDocOption([FromRoute]int id) => await db.GetDocOption(id);
+
+        [HttpPost("[action]")]
+        public async Task<SaveResult> SaveDocOption([FromBody]DocOption option) => await option.Save(db);
+
+        [HttpPost("[action]")]
+        public async Task RemoveDocOption([FromBody]DocOption option) => await option.Remove(db);
+
+        #endregion
+
+        #region Answers
+
+        [HttpGet("[action]/{questionId}")]
+        public async Task<DocAnswer?> GetDocAnswer([FromRoute]int questionId) => await db.GetDocAnswer(questionId);
+
+        [HttpPost("[action]")]
+        public async Task<SaveResult> SaveDocAnswer([FromBody]DocAnswer answer) => await answer.Save(db);
+
+        [HttpPost("[action]")]
+        public async Task RemoveDocAnswer([FromBody]DocAnswer answer) => await answer.Remove(db);
 
         #endregion
     }

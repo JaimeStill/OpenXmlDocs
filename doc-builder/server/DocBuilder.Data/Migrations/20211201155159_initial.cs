@@ -43,7 +43,7 @@ namespace DocBuilder.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "TDoc",
+                name: "DocT",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -54,9 +54,9 @@ namespace DocBuilder.Data.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_TDoc", x => x.Id);
+                    table.PrimaryKey("PK_DocT", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_TDoc_DocCategory_CategoryId",
+                        name: "FK_DocT_DocCategory_CategoryId",
                         column: x => x.CategoryId,
                         principalTable: "DocCategory",
                         principalColumn: "Id",
@@ -88,12 +88,12 @@ namespace DocBuilder.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "TDocItem",
+                name: "DocItemT",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    TDocId = table.Column<int>(type: "int", nullable: false),
+                    DocTId = table.Column<int>(type: "int", nullable: false),
                     Type = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Index = table.Column<int>(type: "int", nullable: false),
                     Value = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -102,11 +102,11 @@ namespace DocBuilder.Data.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_TDocItem", x => x.Id);
+                    table.PrimaryKey("PK_DocItemT", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_TDocItem_TDoc_TDocId",
-                        column: x => x.TDocId,
-                        principalTable: "TDoc",
+                        name: "FK_DocItemT_DocT_DocTId",
+                        column: x => x.DocTId,
+                        principalTable: "DocT",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -153,21 +153,21 @@ namespace DocBuilder.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "TDocOption",
+                name: "DocOptionT",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    TDocItemId = table.Column<int>(type: "int", nullable: false),
+                    DocItemTId = table.Column<int>(type: "int", nullable: false),
                     Value = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_TDocOption", x => x.Id);
+                    table.PrimaryKey("PK_DocOptionT", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_TDocOption_TDocItem_TDocItemId",
-                        column: x => x.TDocItemId,
-                        principalTable: "TDocItem",
+                        name: "FK_DocOptionT_DocItemT_DocItemTId",
+                        column: x => x.DocItemTId,
+                        principalTable: "DocItemT",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -189,24 +189,24 @@ namespace DocBuilder.Data.Migrations
                 column: "DocId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_DocItemT_DocTId",
+                table: "DocItemT",
+                column: "DocTId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_DocOption_DocItemId",
                 table: "DocOption",
                 column: "DocItemId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_TDoc_CategoryId",
-                table: "TDoc",
+                name: "IX_DocOptionT_DocItemTId",
+                table: "DocOptionT",
+                column: "DocItemTId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_DocT_CategoryId",
+                table: "DocT",
                 column: "CategoryId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_TDocItem_TDocId",
-                table: "TDocItem",
-                column: "TDocId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_TDocOption_TDocItemId",
-                table: "TDocOption",
-                column: "TDocItemId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -218,19 +218,19 @@ namespace DocBuilder.Data.Migrations
                 name: "DocOption");
 
             migrationBuilder.DropTable(
-                name: "TDocOption");
+                name: "DocOptionT");
 
             migrationBuilder.DropTable(
                 name: "DocItem");
 
             migrationBuilder.DropTable(
-                name: "TDocItem");
+                name: "DocItemT");
 
             migrationBuilder.DropTable(
                 name: "Doc");
 
             migrationBuilder.DropTable(
-                name: "TDoc");
+                name: "DocT");
 
             migrationBuilder.DropTable(
                 name: "DocCategory");

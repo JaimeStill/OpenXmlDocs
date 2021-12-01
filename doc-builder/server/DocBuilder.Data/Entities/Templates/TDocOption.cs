@@ -1,14 +1,14 @@
 namespace DocBuilder.Data.Entities
 {
-    public class TDocOption
+    public class DocOptionT
     {
         public int Id { get; set; }
-        public int TDocItemId { get; set; }
+        public int DocItemTId { get; set; }
         public string Value { get; set; }
 
-        public TDocItem? TDocItem { get; set; }
+        public DocItemT? DocItemT { get; set; }
 
-        public TDocOption(string value)
+        public DocOptionT(string value)
         {
             Value = value;
         }
