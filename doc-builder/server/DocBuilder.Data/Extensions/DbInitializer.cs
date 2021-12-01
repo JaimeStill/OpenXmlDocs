@@ -11,14 +11,44 @@ namespace DocBuilder.Data.Extensions
             await db.Database.MigrateAsync();
             Console.WriteLine("Database initialized");
 
-            // Seed data here
             if (!await db.DocCategories.AnyAsync())
             {
                 Console.WriteLine("Seeding DocCategories...");
+                Console.WriteLine("Seeding Docs...");
+                Console.WriteLine("Seeding DocItems...");
+                Console.WriteLine("Seeding DocOptions...");
+                Console.WriteLine("Seeding DocAnswers...");
+                Console.WriteLine("Seeding DocTs...");
+                Console.WriteLine("Seeding DocItemTs...");
+                Console.WriteLine("Seeding DocOptionTs...");
+
                 var categories = new List<DocCategory>()
                 {
                     new DocCategory("Request")
                     {
+                        DocTs = new List<DocT>
+                        {
+                            new DocT("Account Request")
+                            {
+                                Items = new List<DocItemT>
+                                {
+                                    new DocItemT("Here is some nonsense.", DocItemType.Item) { Index = 0 },
+                                    new DocItemT("How questionable is this?", DocItemType.Question) { Index = 1 },
+                                    new DocItemT("Make a selection.", DocItemType.Select)
+                                    {
+                                        Index = 2,
+                                        Options = new List<DocOptionT>
+                                        {
+                                            new DocOptionT("Air"),
+                                            new DocOptionT("Water"),
+                                            new DocOptionT("Earth"),
+                                            new DocOptionT("Fire")
+                                        }
+                                    }
+                                }
+                            },
+                            new DocT("Training Request")
+                        },
                         Docs = new List<Doc>
                         {
                             new Doc("Account Request")
@@ -50,11 +80,18 @@ namespace DocBuilder.Data.Extensions
                     },
                     new DocCategory("Assessment")
                     {
+                        DocTs = new List<DocT>
+                        {
+                            new DocT("Perosnal Assessment")
+                            {
+                                Description = "Determines candidate goal and value alignment."
+                            }
+                        },
                         Docs = new List<Doc>
                         {
                             new Doc("Personal Assessment")
                             {
-                                Description = "Determines candidate goal and value alignment"
+                                Description = "Determines candidate goal and value alignment."
                             }
                         }
                     },

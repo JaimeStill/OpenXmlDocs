@@ -72,7 +72,6 @@ namespace DocBuilder.Core.ApiQuery
             {
                 Page = Options.Page,
                 PageSize = Options.PageSize,
-                Search = Options.Search,
                 TotalCount = totalCount,
                 Data = await Queryable
                     .Skip((Options.Page - 1) * Options.PageSize)
@@ -89,7 +88,6 @@ namespace DocBuilder.Core.ApiQuery
             Data = data,
             Page = result.Page,
             PageSize = result.PageSize,
-            Search = result.Search,
             TotalCount = result.TotalCount
         };
     }
