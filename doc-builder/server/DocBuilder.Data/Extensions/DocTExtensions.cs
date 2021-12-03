@@ -20,6 +20,11 @@ namespace DocBuilder.Data.Extensions
                 || (x.Category == null ? false : x.Category.Value.ToLower().Contains(search.ToLower()))
             );
 
+        static void ClearNavProps(this DocT doc)
+        {
+            doc.Category = null;
+        }
+
         public static async Task<QueryResult<DocT>> QueryDocTs(
             this AppDbContext db,
             string page, string pageSize,
@@ -32,11 +37,13 @@ namespace DocBuilder.Data.Extensions
                 page, pageSize, search, sort
             );
 
-            return await container.Query((docs, s) =>
+            var res = await container.Query((docs, s) =>
                 docs.SetupSearch(s, (values, term) =>
                     values.Search(term)
                 )
             );
+
+            return res;
         }
 
         public static async Task<DocT?> GetDocT(this AppDbContext db, int id) =>
@@ -46,7 +53,7 @@ namespace DocBuilder.Data.Extensions
 
         public static async Task<DocT> Clone(this DocT doc, AppDbContext db)
         {
-            var clone = new DocT(doc.Name)
+            var clone = new DocT(await doc.GenerateName(db))
             {
                 CategoryId = doc.CategoryId,
                 Description = doc.Description,
@@ -61,7 +68,7 @@ namespace DocBuilder.Data.Extensions
 
         public static async Task<Doc> Generate(this DocT doc, AppDbContext db)
         {
-            var generated = new Doc(doc.Name)
+            var generated = new Doc(await doc.GenerateDocName(db))
             {
                 CategoryId = doc.CategoryId,
                 Description = doc.Description,
@@ -91,8 +98,31 @@ namespace DocBuilder.Data.Extensions
 
         public static async Task Remove(this DocT doc, AppDbContext db)
         {
+            doc.ClearNavProps();
             db.DocTs.Remove(doc);
             await db.SaveChangesAsync();
+        }
+
+        static async Task<string> GenerateName(this DocT docT, AppDbContext db, int inc = 1)
+        {
+            var name = $"{docT.Name}-{inc}";
+
+            if (await db.DocTs.AnyAsync(d => d.Name == name))
+                return await docT.GenerateName(db, ++inc);
+
+            return name;
+        }
+
+        static async Task<string> GenerateDocName(this DocT docT, AppDbContext db, int inc = 0)
+        {
+            var name = inc > 0
+                ? $"{docT.Name}-{inc}"
+                : docT.Name;
+
+            if (await db.Docs.AnyAsync(d => d.Name == name))
+                return await docT.GenerateDocName(db, ++inc);
+
+            return name;
         }
 
         static async Task<ICollection<T>> CloneItems<T>(this DocT doc, AppDbContext db, Func<ICollection<DocItemT>, ICollection<T>> clone)

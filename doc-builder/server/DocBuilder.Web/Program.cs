@@ -19,8 +19,9 @@ builder.Services
   .AddOData(options => options.Count().Filter().OrderBy().Select().SetMaxTop(100))
   .AddJsonOptions(options =>
   {
+      options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
       options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
-      options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
+      options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
   });
 
 builder.Services.AddEndpointsApiExplorer();

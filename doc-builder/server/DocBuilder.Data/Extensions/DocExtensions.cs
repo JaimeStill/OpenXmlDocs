@@ -20,6 +20,11 @@ namespace DocBuilder.Data.Extensions
                 || (x.Category == null ? false : x.Category.Value.ToLower().Contains(search.ToLower()))
             );
 
+        static void ClearNavProps(this Doc doc)
+        {
+            doc.Category = null;
+        }
+
         public static async Task<QueryResult<Doc>> QueryDocs(
             this AppDbContext db,
             string page, string pageSize,
@@ -46,7 +51,7 @@ namespace DocBuilder.Data.Extensions
 
         public static async Task<Doc> Clone(this Doc doc, AppDbContext db)
         {
-            var clone = new Doc(doc.Name)
+            var clone = new Doc(await doc.GenerateName(db))
             {
                 CategoryId = doc.CategoryId,
                 Description = doc.Description,
@@ -76,8 +81,19 @@ namespace DocBuilder.Data.Extensions
 
         public static async Task Remove(this Doc doc, AppDbContext db)
         {
+            doc.ClearNavProps();
             db.Docs.Remove(doc);
             await db.SaveChangesAsync();
+        }
+
+        static async Task<string> GenerateName(this Doc doc, AppDbContext db, int inc = 1)
+        {
+            var name = $"{doc.Name}-{inc}";
+
+            if (await db.Docs.AnyAsync(d => d.Name == name))
+                return await doc.GenerateName(db, ++inc);
+
+            return name;
         }
 
         static async Task<ICollection<DocItem>> CloneItems(this Doc doc, AppDbContext db)

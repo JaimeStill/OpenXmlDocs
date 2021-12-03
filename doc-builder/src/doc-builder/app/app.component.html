@@ -1,8 +1,9 @@
 <section class="mat-typography mat-app-background app-frame"
          [ngClass]="themer.isLight ? 'app-light' : 'app-dark'">
-  <mat-toolbar color="primary"
-               class="app-toolbar sticky-top">
-    <span fxFlex>Doc Builder</span>
+  <mat-toolbar class="background-default app-toolbar sticky-top">
+    <span class="cursor-pointer color-primary"
+          routerLink="/home">Doc Builder</span>
+    <span fxFlex></span>
     <button mat-icon-button
             [ngClass]="themer.isLight ? 'color-amber' : 'color-text'"
             (click)="themer.toggleTheme()">

@@ -1,1 +1,10 @@
-<p class="mat-title m8">Home</p>
+<nav mat-tab-nav-bar
+     class="flexible">
+  <a mat-tab-link
+     routerLink="templates"
+     routerLinkActive="active">Templates</a>
+  <a mat-tab-link
+     routerLink="documents"
+     routerLinkActive="active">Documents</a>
+</nav>
+<router-outlet></router-outlet>

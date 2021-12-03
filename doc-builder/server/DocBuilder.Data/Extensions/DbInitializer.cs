@@ -82,7 +82,7 @@ namespace DocBuilder.Data.Extensions
                     {
                         DocTs = new List<DocT>
                         {
-                            new DocT("Perosnal Assessment")
+                            new DocT("Personal Assessment")
                             {
                                 Description = "Determines candidate goal and value alignment."
                             }

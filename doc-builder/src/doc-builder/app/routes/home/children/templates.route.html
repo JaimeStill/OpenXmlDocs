@@ -1,0 +1,26 @@
+<section fxLayout="column"
+         fxLayoutAlign="start stretch">
+  <section class="p8"
+           fxLayout="row | wrap"
+           fxLayoutAlign="start center">
+    <button mat-stroked-button
+            class="m4"
+            (click)="add()">Add Template</button>
+  </section>
+  <async-container searchLabel="Search Templates"
+                   [src]="docTSrc"
+                   (query)="setQuery($event)">
+    <section *ngIf="query && query.data.length > 0"
+             fxLayout="row | wrap"
+             fxLayoutAlign="start start"
+             class="p8">
+      <doc-t-card *ngFor="let template of query.data"
+                  [template]="template"
+                  (view)="view($event)"
+                  (edit)="edit($event)"
+                  (remove)="remove($event)"
+                  (clone)="clone($event)"
+                  (generate)="generate($event)"></doc-t-card>
+    </section>
+  </async-container>
+</section>

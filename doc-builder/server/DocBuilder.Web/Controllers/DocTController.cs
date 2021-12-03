@@ -47,7 +47,7 @@ namespace DocBuilder.Web.Controllers
 
         #region ItemTs
 
-        [HttpGet("[action]/{docTId")]
+        [HttpGet("[action]/{docTId}")]
         public async Task<List<DocItemT>> GetDocItemTs([FromRoute]int docTId) => await db.GetDocItemTs(docTId);
 
         [HttpGet("[action]/{id}")]

@@ -46,8 +46,8 @@ export class DocTService {
       error: err => this.snacker.sendErrorMessage(err.message)
     });
 
-  cloneDocT = (doc: DocT): Promise<DocT | null> => new Promise((resolve) => {
-    this.http.post<DocT>(`${this.config.api}docT/cloneDocT`, doc)
+  cloneDocT = (docT: DocT): Promise<DocT | null> => new Promise((resolve) => {
+    this.http.post<DocT>(`${this.config.api}docT/cloneDocT`, docT)
       .subscribe({
         next: data => resolve(data),
         error: err => {
@@ -57,8 +57,8 @@ export class DocTService {
       });
   });
 
-  generateDoc = (doc: DocT): Promise<Doc | null> => new Promise((resolve) => {
-    this.http.post<Doc>(`${this.config.api}docT/generateDoc`, doc)
+  generateDoc = (docT: DocT): Promise<Doc | null> => new Promise((resolve) => {
+    this.http.post<Doc>(`${this.config.api}docT/generateDoc`, docT)
       .subscribe({
         next: data => resolve(data),
         error: err => {
@@ -68,15 +68,15 @@ export class DocTService {
       })
   });
 
-  saveDocT = (doc: DocT): Promise<boolean> => new Promise((resolve) => {
-    this.http.post<SaveResult>(`${this.config.api}docT/saveDocT`, doc)
+  saveDocT = (docT: DocT): Promise<boolean> => new Promise((resolve) => {
+    this.http.post<SaveResult>(`${this.config.api}docT/saveDocT`, docT)
       .subscribe({
         next: data => {
           if (data.isValid) {
-            this.snacker.sendSuccessMessage(`${doc.name} successfully saved.`);
+            this.snacker.sendSuccessMessage(`${docT.name} successfully saved.`);
             resolve(true);
           } else {
-            this.snacker.sendErrorMessage(data.message ?? `An error occurred attempting to save ${doc.name}`);
+            this.snacker.sendErrorMessage(data.message ?? `An error occurred attempting to save ${docT.name}`);
             resolve(false);
           }
         },
@@ -87,11 +87,11 @@ export class DocTService {
       })
   });
 
-  removeDocT = (doc: DocT): Promise<boolean> => new Promise((resolve) => {
-    this.http.post(`${this.config.api}docT/removeDocT`, doc)
+  removeDocT = (docT: DocT): Promise<boolean> => new Promise((resolve) => {
+    this.http.post(`${this.config.api}docT/removeDocT`, docT)
       .subscribe({
         next: () => {
-          this.snacker.sendSuccessMessage(`${doc.name} successfully removed.`);
+          this.snacker.sendSuccessMessage(`${docT.name} successfully removed.`);
           resolve(true);
         },
         error: err => {
