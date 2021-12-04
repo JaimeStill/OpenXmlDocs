@@ -32,6 +32,9 @@ namespace DocBuilder.Web.Controllers
         public async Task<Doc?> GetDoc([FromRoute]int id) => await db.GetDoc(id);
 
         [HttpPost("[action]")]
+        public async Task<bool> VerifyDoc([FromBody]Doc doc) => await doc.Verify(db);
+
+        [HttpPost("[action]")]
         public async Task<Doc> CloneDoc([FromBody]Doc doc) => await doc.Clone(db);
 
         [HttpPost("[action]")]
@@ -53,8 +56,14 @@ namespace DocBuilder.Web.Controllers
             [FromQuery]string sort
         ) => Ok(await db.QueryDocCategories(page, pageSize, search, sort));
 
+        [HttpGet("[action]")]
+        public async Task<List<DocCategory>> GetDocCategories() => await db.GetDocCategories();
+
         [HttpGet("[action]/{id}")]
         public async Task<DocCategory?> GetDocCategory([FromRoute]int id) => await db.GetDocCategory(id);
+
+        [HttpPost("[action]")]
+        public async Task<bool> VerifyCategory([FromBody]DocCategory category) => await category.Verify(db);
 
         [HttpPost("[action]")]
         public async Task<SaveResult> SaveDocCategory([FromBody]DocCategory category) => await category.Save(db);

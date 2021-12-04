@@ -10,17 +10,7 @@
       <mat-icon>more_vert</mat-icon>
     </button>
     <mat-menu #docMenu="matMenu">
-      <button mat-menu-item
-              (click)="view.emit(doc)">View</button>
-      <button mat-menu-item (click)="fill.emit(doc)">Fill</button>
-      <button mat-menu-item
-              (click)="edit.emit(doc)">Edit</button>
-      <button mat-menu-item
-              class="color-warn"
-              (click)="remove.emit(doc)">Remove</button>
-      <mat-divider></mat-divider>
-      <button mat-menu-item
-              (click)="clone.emit(doc)">Clone</button>
+      <ng-content></ng-content>
     </mat-menu>
   </section>
   <p class="m4">{{doc?.description ?? 'No description available'}}</p>

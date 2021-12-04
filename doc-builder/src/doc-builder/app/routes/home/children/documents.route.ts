@@ -7,8 +7,10 @@ import {
 import {
   ConfirmDialog,
   Doc,
+  DocDialog,
   DocService,
   DocSource,
+  DocType,
   QueryResult
 } from 'core';
 
@@ -47,7 +49,16 @@ export class DocumentsRoute implements OnInit, OnDestroy {
     this.sub?.unsubscribe();
   }
 
-  add = () => { }
+  add = () => this.dialog.open(DocDialog, {
+    data: { doc: {} as Doc, type: DocType.Document },
+    disableClose: true,
+    minWidth: '500px',
+    maxWidth: '800px',
+    width: '90%'
+  })
+  .afterClosed()
+  .subscribe(res => res && this.docSrc.forceRefresh());
+
   edit = (doc: Doc) => this.router.navigate(['document', doc.id, 'edit']);
   fill = (doc: Doc) => this.router.navigate(['document', doc.id, 'fill']);
   view = (doc: Doc) => this.router.navigate(['document', doc.id, 'view']);

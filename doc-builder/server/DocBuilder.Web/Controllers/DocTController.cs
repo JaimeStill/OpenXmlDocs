@@ -32,6 +32,9 @@ namespace DocBuilder.Web.Controllers
         public async Task<DocT?> GetDocT([FromRoute]int id) => await db.GetDocT(id);
 
         [HttpPost("[action]")]
+        public async Task<bool> VerifyTemplate([FromBody]DocT doc) => await doc.Verify(db);
+
+        [HttpPost("[action]")]
         public async Task<DocT> CloneDocT([FromBody]DocT doc) => await doc.Clone(db);
 
         [HttpPost("[action]")]

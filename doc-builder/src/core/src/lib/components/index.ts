@@ -1,16 +1,13 @@
 import { CoreComponents } from './core';
-import { DocumentComponents } from './document';
+import { DocumentComponents } from './doc';
 import { LayoutComponents } from './layout';
-import { TemplateComponents } from './template';
 
 export const Components = [
   ...CoreComponents,
   ...DocumentComponents,
-  ...LayoutComponents,
-  ...TemplateComponents
+  ...LayoutComponents
 ];
 
 export * from './core';
-export * from './document';
+export * from './doc';
 export * from './layout';
-export * from './template';

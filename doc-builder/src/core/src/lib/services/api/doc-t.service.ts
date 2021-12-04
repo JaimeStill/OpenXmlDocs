@@ -46,6 +46,17 @@ export class DocTService {
       error: err => this.snacker.sendErrorMessage(err.message)
     });
 
+  verifyTemplate = (docT: DocT): Promise<boolean> => new Promise((resolve) => {
+    this.http.post<boolean>(`${this.config.api}docT/verifyTemplate`, docT)
+      .subscribe({
+        next: data => resolve(data),
+        error: err => {
+          this.snacker.sendErrorMessage(err.error);
+          resolve(false);
+        }
+      })
+  });
+
   cloneDocT = (docT: DocT): Promise<DocT | null> => new Promise((resolve) => {
     this.http.post<DocT>(`${this.config.api}docT/cloneDocT`, docT)
       .subscribe({
