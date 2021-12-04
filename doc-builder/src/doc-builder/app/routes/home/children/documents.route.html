@@ -15,12 +15,20 @@
              fxLayoutAlign="start start"
              class="p8">
       <doc-card *ngFor="let doc of query.data"
-                [doc]="doc"
-                (view)="view($event)"
-                (edit)="edit($event)"
-                (fill)="fill($event)"
-                (remove)="remove($event)"
-                (clone)="clone($event)"></doc-card>
+                [doc]="doc">
+        <button mat-menu-item
+                (click)="view(doc)">View</button>
+        <button mat-menu-item
+                (click)="fill(doc)">Fill</button>
+        <button mat-menu-item
+                (click)="edit(doc)">Edit</button>
+        <button mat-menu-item
+                class="color-warn"
+                (click)="remove(doc)">Remove</button>
+        <mat-divider></mat-divider>
+        <button mat-menu-item
+                (click)="clone(doc)">Clone</button>
+      </doc-card>
     </section>
   </async-container>
 </section>

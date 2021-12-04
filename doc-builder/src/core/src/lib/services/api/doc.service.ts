@@ -22,6 +22,7 @@ import { SnackerService } from '../snacker.service';
 })
 export class DocService {
   private doc = new BehaviorSubject<Doc | null>(null);
+  private docCategories = new BehaviorSubject<DocCategory[] | null>(null);
   private docCategory = new BehaviorSubject<DocCategory | null>(null);
   private docItems = new BehaviorSubject<DocItem[] | null>(null);
   private docItem = new BehaviorSubject<DocItem | null>(null);
@@ -30,10 +31,13 @@ export class DocService {
   private docAnswer = new BehaviorSubject<DocAnswer | null>(null);
 
   doc$ = this.doc.asObservable();
+  docCategories$ = this.docCategories.asObservable();
+  docCategory$ = this.docCategory.asObservable();
   docItems$ = this.docItems.asObservable();
   docItem$ = this.docItem.asObservable();
   docOptions$ = this.docOptions.asObservable();
   docOption$ = this.docOption.asObservable();
+  docAnswer$ = this.docAnswer.asObservable();
 
   constructor(
     private http: HttpClient,
@@ -48,6 +52,17 @@ export class DocService {
       next: data => this.doc.next(data),
       error: err => this.snacker.sendErrorMessage(err.message)
     });
+
+  verifyDoc = (doc: Doc): Promise<boolean> => new Promise((resolve) => {
+    this.http.post<boolean>(`${this.config.api}doc/verifyDoc`, doc)
+      .subscribe({
+        next: data => resolve(data),
+        error: err => {
+          this.snacker.sendErrorMessage(err.error);
+          resolve(false);
+        }
+      })
+  });
 
   cloneDoc = (doc: Doc): Promise<Doc | null> => new Promise((resolve) => {
     this.http.post<Doc>(`${this.config.api}doc/cloneDoc`, doc)
@@ -97,11 +112,28 @@ export class DocService {
 
   //#region Category
 
+  getDocCategories = () => this.http.get<DocCategory[]>(`${this.config.api}doc/getDocCategories`)
+    .subscribe({
+      next: data => this.docCategories.next(data),
+      error: err => this.snacker.sendErrorMessage(err.message)
+    });
+
   getDocCategory = (id: number) => this.http.get<DocCategory | null>(`${this.config.api}doc/getDocCategory/${id}`)
     .subscribe({
       next: data => this.docCategory.next(data),
       error: err => this.snacker.sendErrorMessage(err.message)
     });
+
+  verifyCategory = (category: DocCategory): Promise<boolean> => new Promise((resolve) => {
+    this.http.post<boolean>(`${this.config.api}doc/verifyCategory`, category)
+      .subscribe({
+        next: data => resolve(data),
+        error: err => {
+          this.snacker.sendErrorMessage(err.message);
+          resolve(false);
+        }
+      })
+  });
 
   saveDocCategory = (category: DocCategory): Promise<boolean> => new Promise((resolve) => {
     this.http.post<SaveResult>(`${this.config.api}doc/saveDocCategory`, category)

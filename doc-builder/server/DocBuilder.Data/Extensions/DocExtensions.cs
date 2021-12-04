@@ -49,6 +49,17 @@ namespace DocBuilder.Data.Extensions
                 .SetIncludes()
                 .FirstOrDefaultAsync(x => x.Id == id);
 
+        public static async Task<bool> Verify(this Doc doc, AppDbContext db)
+        {
+            var check = await db.Docs
+                .FirstOrDefaultAsync(x =>
+                    x.Id != doc.Id
+                    && x.Name.ToLower() == doc.Name.ToLower()
+                );
+
+            return check is null;
+        }
+
         public static async Task<Doc> Clone(this Doc doc, AppDbContext db)
         {
             var clone = new Doc(await doc.GenerateName(db))
@@ -140,13 +151,9 @@ namespace DocBuilder.Data.Extensions
             if (string.IsNullOrEmpty(doc.Name))
                 return new SaveResult { IsValid = false, Message = "Document must have a name." };
 
-            var check = await db.Docs
-                .FirstOrDefaultAsync(x =>
-                    x.Id != doc.Id
-                    && x.Name.ToLower() == doc.Name.ToLower()
-                );
+            var check = await doc.Verify(db);
 
-            return check is null
+            return check
                 ? new SaveResult { IsValid = true }
                 : new SaveResult { IsValid = false, Message = $"Document name {doc.Name} is already in use." };
         }
@@ -178,9 +185,25 @@ namespace DocBuilder.Data.Extensions
             );
         }
 
+        public static async Task<List<DocCategory>> GetDocCategories(this AppDbContext db) =>
+            await db.DocCategories
+                .OrderBy(x => x.Value)
+                .ToListAsync();
+
         public static async Task<DocCategory?> GetDocCategory(this AppDbContext db, int id) =>
             await db.DocCategories
                 .FindAsync(id);
+
+        public static async Task<bool> Verify(this DocCategory category, AppDbContext db)
+        {
+            var check = await db.DocCategories
+                .FirstOrDefaultAsync(x =>
+                    x.Id != category.Id
+                    && x.Value.ToLower() == category.Value.ToLower()
+                );
+
+            return check is null;
+        }
 
         public static async Task<SaveResult> Save(this DocCategory category, AppDbContext db)
         {
@@ -222,13 +245,9 @@ namespace DocBuilder.Data.Extensions
             if (string.IsNullOrEmpty(category.Value))
                 return new SaveResult { IsValid = false, Message = "Category must have a value." };
 
-            var check = await db.DocCategories
-                .FirstOrDefaultAsync(x =>
-                    x.Id != category.Id
-                    && x.Value.ToLower() == category.Value.ToLower()
-                );
+            var check = await category.Verify(db);
 
-            return check is null
+            return check
                 ? new SaveResult { IsValid = true }
                 : new SaveResult { IsValid = false, Message = $"Category {category.Value} is already in use." };
         }

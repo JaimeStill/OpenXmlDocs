@@ -6,9 +6,11 @@ import {
 
 import {
   ConfirmDialog,
+  DocDialog,
   DocT,
   DocTService,
   DocTSource,
+  DocType,
   QueryResult
 } from 'core';
 
@@ -47,7 +49,16 @@ export class TemplatesRoute implements OnInit, OnDestroy {
 
   setQuery = (q: QueryResult<DocT>) => this.query = q;
 
-  add = () => { };
+  add = async () => this.dialog.open(DocDialog, {
+    data: { doc: {} as DocT, type: DocType.Template },
+    disableClose: true,
+    minWidth: '500px',
+    maxWidth: '800px',
+    width: '90%'
+  })
+  .afterClosed()
+  .subscribe(res => res && this.docTSrc.forceRefresh());
+
   edit = (docT: DocT) => this.router.navigate(['template', docT.id, 'edit']);
   view = (docT: DocT) => this.router.navigate(['template', docT.id, 'view']);
 

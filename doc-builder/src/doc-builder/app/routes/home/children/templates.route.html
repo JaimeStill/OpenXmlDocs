@@ -14,13 +14,21 @@
              fxLayout="row | wrap"
              fxLayoutAlign="start start"
              class="p8">
-      <doc-t-card *ngFor="let template of query.data"
-                  [template]="template"
-                  (view)="view($event)"
-                  (edit)="edit($event)"
-                  (remove)="remove($event)"
-                  (clone)="clone($event)"
-                  (generate)="generate($event)"></doc-t-card>
+      <doc-card *ngFor="let template of query.data"
+                [doc]="template">
+        <button mat-menu-item
+                (click)="view(template)">View</button>
+        <button mat-menu-item
+                (click)="edit(template)">Edit</button>
+        <button mat-menu-item
+                class="color-warn"
+                (click)="remove(template)">Remove</button>
+        <mat-divider></mat-divider>
+        <button mat-menu-item
+                (click)="clone(template)">Clone</button>
+        <button mat-menu-item
+                (click)="generate(template)">Generate</button>
+      </doc-card>
     </section>
   </async-container>
 </section>

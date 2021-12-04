@@ -51,6 +51,17 @@ namespace DocBuilder.Data.Extensions
                 .SetIncludes()
                 .FirstOrDefaultAsync(x => x.Id == id);
 
+        public static async Task<bool> Verify(this DocT doc, AppDbContext db)
+        {
+            var check = await db.DocTs
+                .FirstOrDefaultAsync(x =>
+                    x.Id != doc.Id
+                    && x.Name.ToLower() == doc.Name.ToLower()
+                );
+
+            return check is null;
+        }
+
         public static async Task<DocT> Clone(this DocT doc, AppDbContext db)
         {
             var clone = new DocT(await doc.GenerateName(db))
@@ -189,13 +200,9 @@ namespace DocBuilder.Data.Extensions
             if (string.IsNullOrEmpty(doc.Name))
                 return new SaveResult { IsValid = false, Message = "Document Template must have a name." };
 
-            var check = await db.Docs
-                .FirstOrDefaultAsync(x =>
-                    x.Id != doc.Id
-                    && x.Name.ToLower() == doc.Name.ToLower()
-                );
+            var check = await doc.Verify(db);
 
-            return check is null
+            return check
                 ? new SaveResult { IsValid = true }
                 : new SaveResult { IsValid = false, Message = $"Document Template name {doc.Name} is already in use." };
         }
