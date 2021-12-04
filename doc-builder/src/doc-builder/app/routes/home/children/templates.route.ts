@@ -47,7 +47,7 @@ export class TemplatesRoute implements OnInit, OnDestroy {
 
   setQuery = (q: QueryResult<DocT>) => this.query = q;
 
-  add = () => this.router.navigate(['template', 'new']);
+  add = () => { };
   edit = (docT: DocT) => this.router.navigate(['template', docT.id, 'edit']);
   view = (docT: DocT) => this.router.navigate(['template', docT.id, 'view']);
 
@@ -64,7 +64,7 @@ export class TemplatesRoute implements OnInit, OnDestroy {
   remove = (docT: DocT) => this.dialog.open(ConfirmDialog, {
     data: {
       title: `Remove ${docT.name}`,
-      content: `Are you sure you want to remove document template ${docT.name}`
+      content: `Are you sure you want to remove document template ${docT.name}?`
     },
     autoFocus: false,
     disableClose: true

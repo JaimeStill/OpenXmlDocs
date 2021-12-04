@@ -1,0 +1,27 @@
+<section fxLayout="column"
+         fxLayoutAlign="space-between stretch"
+         [class]="cardStyle"
+         [style.width.px]="size">
+  <section fxLayout="row"
+           fxLayoutAlign="space-between center">
+    <p class="m4 mat-body-strong">{{doc?.name}}</p>
+    <button mat-icon-button
+            [matMenuTriggerFor]="docMenu">
+      <mat-icon>more_vert</mat-icon>
+    </button>
+    <mat-menu #docMenu="matMenu">
+      <button mat-menu-item
+              (click)="view.emit(doc)">View</button>
+      <button mat-menu-item (click)="fill.emit(doc)">Fill</button>
+      <button mat-menu-item
+              (click)="edit.emit(doc)">Edit</button>
+      <button mat-menu-item
+              class="color-warn"
+              (click)="remove.emit(doc)">Remove</button>
+      <mat-divider></mat-divider>
+      <button mat-menu-item
+              (click)="clone.emit(doc)">Clone</button>
+    </mat-menu>
+  </section>
+  <p class="m4">{{doc?.description ?? 'No description available'}}</p>
+</section>

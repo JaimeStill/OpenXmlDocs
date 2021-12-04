@@ -1,0 +1,26 @@
+<section fxLayout="column"
+         fxLayoutAlign="start stretch">
+  <section class="p8"
+           fxLayout="row | wrap"
+           fxLayoutAlign="start center">
+    <button mat-stroked-button
+            class="m4"
+            (click)="add()">Add Document</button>
+  </section>
+  <async-container searchLabel="Search Documents"
+                   [src]="docSrc"
+                   (query)="setQuery($event)">
+    <section *ngIf="query && query.data.length > 0"
+             fxLayout="row | wrap"
+             fxLayoutAlign="start start"
+             class="p8">
+      <doc-card *ngFor="let doc of query.data"
+                [doc]="doc"
+                (view)="view($event)"
+                (edit)="edit($event)"
+                (fill)="fill($event)"
+                (remove)="remove($event)"
+                (clone)="clone($event)"></doc-card>
+    </section>
+  </async-container>
+</section>

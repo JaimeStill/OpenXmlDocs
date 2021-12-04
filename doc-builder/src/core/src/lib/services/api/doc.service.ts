@@ -49,6 +49,17 @@ export class DocService {
       error: err => this.snacker.sendErrorMessage(err.message)
     });
 
+  cloneDoc = (doc: Doc): Promise<Doc | null> => new Promise((resolve) => {
+    this.http.post<Doc>(`${this.config.api}doc/cloneDoc`, doc)
+      .subscribe({
+        next: data => resolve(data),
+        error: err => {
+          this.snacker.sendErrorMessage(err.message);
+          resolve(null);
+        }
+      });
+  });
+
   saveDoc = (doc: Doc): Promise<boolean> => new Promise((resolve) => {
     this.http.post<SaveResult>(`${this.config.api}doc/saveDoc`, doc)
       .subscribe({
